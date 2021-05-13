@@ -9,9 +9,11 @@ class Brand(object):
 
     def __init__(self,
                  id_: str,
-                 followers: List[User] = None) -> None:
+                 followers: List[User] = None,
+                 centroids: List[dict] = None) -> None:
         self.id_ = id_
         self.followers = followers
+        self.centroids = centroids
 
 
 class User(object):
@@ -23,12 +25,13 @@ class User(object):
                  location: str = None,
                  profile_image_url: str = None,
                  biography: str = None,
-                 user_type: str = None,
+                 type_: str = None,
                  pref_language: str = None,
                  site: str = None,
                  followers_count: int = None,
                  following_count: int = None,
-                 posts: List[Post] = None
+                 posts: List[Post] = None,
+                 cluster: int = None
                  ) -> None:
         self.id_ = id_
         self.name = name
@@ -36,17 +39,18 @@ class User(object):
         self.location = location
         self.profile_image_url = profile_image_url
         self.biography = biography
-        self.user_type = user_type
+        self.type_ = type_
         self.pref_language = pref_language
         self.site = site
         self.followers_count = followers_count
         self.following_count = following_count
         self.posts = posts
+        self.cluster = cluster
 
     @classmethod
     def from_dict(cls, dct: dict) -> User:
-        allowed_fields = ("id_", "name", "gender", "location", "profile_image_url", "biography", "user_type",
-                          "pref_language", "site", "followers_count", "following_count", "posts")
+        allowed_fields = ("id_", "name", "gender", "location", "profile_image_url", "biography", "type_",
+                          "pref_language", "site", "followers_count", "following_count", "posts", "cluster")
 
         allowed_attributes = {k: v for k, v in dct.items() if k in allowed_fields}
 

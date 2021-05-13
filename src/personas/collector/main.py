@@ -26,7 +26,7 @@ if __name__ == "__main__":
 
     # Get the timeline of each follower
     for user in uhopper.followers:
-        twitter.get_timeline(user)
+        twitter.get_timeline(user, 100)
 
     # Save everything in database
     db = Database()

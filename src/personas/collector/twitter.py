@@ -15,7 +15,7 @@ class TwitterCollector(object):
                  access_token_secret: str) -> None:
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(access_token, access_token_secret)
-        self.api = tweepy.API(auth)
+        self.api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     @staticmethod
     def __parse_user(user) -> User:
@@ -65,19 +65,25 @@ class TwitterCollector(object):
             shares=tweet.retweet_count,
         )
 
-    def get_followers(self, user: Union[User, Brand]) -> None:
+    def get_followers(self, user: Union[User, Brand], count: int = 0) -> None:
         print(f"Downloading followers of Twitter user {user.id_}...", end=" ")
-        followers = self.api.followers(user_id=user.id_, skip_status=True, include_user_entities=False)
+        followers = []
+        for follower in tweepy.Cursor(self.api.followers, user_id=user.id_, skip_status=True,
+                                      include_user_entities=False, count=200).items(count):
+            followers.append(follower)
         print("Done")
 
         user.followers = []
         for follower in followers:
             user.followers.append(self.__parse_user(follower))
 
-    def get_timeline(self, user: Union[User, Brand]) -> None:
+    def get_timeline(self, user: Union[User, Brand], count: int = 0) -> None:
         print(f"Downloading timeline of Twitter user {user.id_}...", end=" ")
         try:
-            tweets = self.api.user_timeline(user_id=user.id_, trim_user=True)
+            tweets = []
+            for tweet in tweepy.Cursor(self.api.user_timeline, user_id=user.id_, trim_user=True,
+                                       count=200).items(count):
+                tweets.append(tweet)
             print("Done")
 
             user.posts = []

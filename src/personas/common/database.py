@@ -1,4 +1,5 @@
 from typing import List
+import json
 
 import redis
 
@@ -50,10 +51,13 @@ class Database(object):
         # Save followers separately (Redis can't nest data types)
         if brand.followers:
             self.save_brand_followers(brand)
+        if brand.centroids:
+            self.save_brand_centroids(brand)
 
         # Save the hash of the other attributes
         attributes = brand.__dict__
-        attributes.pop("followers")
+        attributes.pop("followers", None)
+        attributes.pop("centroids", None)
         self.__connection.hmset(key, attributes)
 
     def get_brand(self, brand_id: str) -> Brand:
@@ -65,6 +69,7 @@ class Database(object):
 
         # Get the followers list and populate it
         brand.followers = self.get_brand_followers(brand)
+        brand.centroids = self.get_brand_centroids(brand)
 
         return brand
 
@@ -91,6 +96,24 @@ class Database(object):
             followers.append(self.get_user(user_id=follower_id))
 
         return followers
+
+    def save_brand_centroids(self, brand: Brand) -> None:
+        brand_key = self.__get_brand_key(brand)
+        centroids_key = f"{brand_key}:centroids"
+
+        self.__connection.delete(centroids_key)
+        for centroid in brand.centroids:
+            centroid_json = json.dumps(centroid)
+            self.__connection.rpush(centroids_key, centroid_json)
+
+    def get_brand_centroids(self, brand: Brand) -> List[dict]:
+        brand_key = self.__get_brand_key(brand)
+        centroids_key = f"{brand_key}:centroids"
+
+        centroids_json = self.__connection.lrange(centroids_key, 0, -1)
+        centroids = [json.loads(centroid) for centroid in centroids_json]
+
+        return centroids
 
     def save_user(self, user: User) -> None:
         key = self.__get_user_key(user=user)
@@ -170,6 +193,16 @@ class Database(object):
             setattr(post, field, value)
 
         return post
+
+    def get_user_persona(self, brand_id: str, user_id: str) -> dict:
+        brand_key = self.__get_brand_key(brand_id=brand_id)
+        user_key = self.__get_user_key(user_id=user_id)
+
+        cluster_id = int(self.__connection.hget(user_key, "cluster"))
+        personas = self.get_brand_centroids(Brand(brand_id))
+
+        return personas[cluster_id]
+
 
     def __save_post_lists(self, post: Post, list_fields: list, set_fields: list) -> None:
         key = self.__get_post_key(post=post)
