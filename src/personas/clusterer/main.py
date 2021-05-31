@@ -60,7 +60,7 @@ if __name__ == "__main__":
         costs.append(kmodes.cost_)
 
     kn = KneeLocator(range(1, kmax + 1), costs, curve="convex", direction="decreasing")
-    number_clusters = kn.knee
+    number_clusters = 2
 
     # Perform clustering
     kmodes = KModes(n_clusters=number_clusters, init="Cao")

@@ -1,5 +1,3 @@
-import argparse
-
 from personas.common.database import Database
 from personas.common.user import Brand
 

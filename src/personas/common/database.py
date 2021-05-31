@@ -195,14 +195,15 @@ class Database(object):
         return post
 
     def get_user_persona(self, brand_id: str, user_id: str) -> dict:
-        brand_key = self.__get_brand_key(brand_id=brand_id)
         user_key = self.__get_user_key(user_id=user_id)
 
-        cluster_id = int(self.__connection.hget(user_key, "cluster"))
-        personas = self.get_brand_centroids(Brand(brand_id))
-
-        return personas[cluster_id]
-
+        cluster_id = self.__connection.hget(user_key, "cluster")
+        if cluster_id is not None:
+            cluster_id = int(cluster_id)
+            personas = self.get_brand_centroids(Brand(brand_id))
+            return personas[cluster_id]
+        else:
+            return {}
 
     def __save_post_lists(self, post: Post, list_fields: list, set_fields: list) -> None:
         key = self.__get_post_key(post=post)
