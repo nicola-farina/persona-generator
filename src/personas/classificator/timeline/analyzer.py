@@ -1,7 +1,7 @@
 import collections
 from typing import List
 
-from personas.common.post import Post
+from personas.models.post import Post
 
 
 class TimelineAnalyzer:

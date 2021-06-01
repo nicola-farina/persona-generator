@@ -1,34 +1,33 @@
-from os import getenv
-
-from dotenv import load_dotenv
+import argparse
 
 from personas.collector.twitter import TwitterCollector
-from personas.common.user import Brand
-from personas.common.database import Database
+from personas.collector.keys import \
+    TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
 
 if __name__ == "__main__":
-    # TWITTER
-    # Get API keys
-    load_dotenv()
-    consumer_key = getenv("TWITTER_CONSUMER_KEY")
-    consumer_secret = getenv("TWITTER_CONSUMER_SECRET")
-    access_token = getenv("TWITTER_ACCESS_TOKEN")
-    access_token_secret = getenv("TWITTER_ACCESS_TOKEN_SECRET")
+    # Setup argparser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-s", "--source", required=True)
+    parser.add_argument("-u", "--user_id", required=True)
+    args = parser.parse_args()
 
-    twitter = TwitterCollector(consumer_key, consumer_secret, access_token, access_token_secret)
+    # Get the user IDs from command line
+    source_name: str = args.source
+    user_id: str = args.user_id
 
-    # Create brand
-    uhopper_id = "223439979"
-    uhopper = Brand(uhopper_id)
+    if source_name.lower() == "twitter":
+        # Get API keys
+        twitter = TwitterCollector(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET,
+                                   TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
 
-    # Get followers
-    twitter.get_followers(uhopper)
+        # Get profile info and activities
+        print("=" * 80)
+        twitter_source = twitter.get_user(user_id)
+        tweets = twitter.get_timeline(user_id, count=20)
 
-    # Get the timeline of each follower
-    for user in uhopper.followers:
-        twitter.get_timeline(user, 100)
-
-    # Save everything in database
-    db = Database()
-    db.save_brand(uhopper)
-
+        # Print them
+        print()
+        print(twitter_source)
+        print(f"Retrieved {len(tweets)} activities")
+        print(tweets[0])
+        print("=" * 80)

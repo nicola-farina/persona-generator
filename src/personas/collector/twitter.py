@@ -1,13 +1,12 @@
-from typing import List, Union
+from typing import List
 
 import tweepy
 
-from personas.common.user import User, Brand
-from personas.common.post import Post
+from personas.models.sources.twitter import TwitterDataSource
+from personas.models.activities.twitter import TwitterActivity
 
 
 class TwitterCollector(object):
-
     def __init__(self,
                  consumer_key: str,
                  consumer_secret: str,
@@ -18,23 +17,25 @@ class TwitterCollector(object):
         self.api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     @staticmethod
-    def __parse_user(user) -> User:
-        if user.default_profile_image:
-            user.profile_image_url_https = None
+    def __parse_user(data) -> TwitterDataSource:
+        if data.default_profile_image:
+            data.profile_image_url_https = None
 
-        return User(
-            id_=user.id_str,
-            name=user.name,
-            location=user.location,
-            profile_image_url=user.profile_image_url_https,
-            biography=user.description,
-            site=user.url,
-            followers_count=user.followers_count,
-            following_count=user.friends_count
+        return TwitterDataSource(
+            source_user_id=data.id_str,
+            username=data.screen_name,
+            attributes=None,
+            name=data.name,
+            location=data.location,
+            profile_image_url=data.profile_image_url_https,
+            description=data.description,
+            url=data.url,
+            followers_count=data.followers_count,
+            following_count=data.friends_count
         )
 
     @staticmethod
-    def __parse_tweet(tweet) -> Post:
+    def __parse_tweet(tweet) -> TwitterActivity:
         media = tweet.entities.get("media")
         if media is None:
             media = []
@@ -53,41 +54,36 @@ class TwitterCollector(object):
         else:
             urls = [url["url"] for url in urls]
 
-        return Post(
-            id_=tweet.id_str,
+        return TwitterActivity(
+            activity_id=tweet.id_str,
             author_id=tweet.user.id_str,
             text=tweet.text,
+            language=tweet.lang,
             media=media,
             hashtags=hashtags,
             urls=urls,
-            language=tweet.lang,
             likes=tweet.favorite_count,
-            shares=tweet.retweet_count,
+            shares=tweet.retweet_count
         )
 
-    def get_followers(self, user: Union[User, Brand], count: int = 0) -> None:
-        print(f"Downloading followers of Twitter user {user.id_}...", end=" ")
-        followers = []
-        for follower in tweepy.Cursor(self.api.followers, user_id=user.id_, skip_status=True,
-                                      include_user_entities=False, count=200).items(count):
-            followers.append(follower)
-        print("Done")
+    def get_user(self, user_id: str) -> TwitterDataSource:
+        print(f"Downloading profile data of Twitter user {user_id}...", end=" ")
+        try:
+            user_data = self.api.get_user(user_id=user_id)
+            print("Done")
+            return self.__parse_user(user_data)
+        except tweepy.error.TweepError as ex:
+            print("Failed:", ex.response.text)
 
-        user.followers = []
-        for follower in followers:
-            user.followers.append(self.__parse_user(follower))
-
-    def get_timeline(self, user: Union[User, Brand], count: int = 0) -> None:
-        print(f"Downloading timeline of Twitter user {user.id_}...", end=" ")
+    def get_timeline(self, user_id, count: int = 200) -> List[TwitterActivity]:
+        print(f"Downloading {count} tweets of Twitter user {user_id}...", end=" ")
         try:
             tweets = []
-            for tweet in tweepy.Cursor(self.api.user_timeline, user_id=user.id_, trim_user=True,
-                                       count=200).items(count):
-                tweets.append(tweet)
+            count_per_page = count if count < 200 else 200
+            for tweet in tweepy.Cursor(self.api.user_timeline, user_id=user_id, trim_user=True,
+                                       count=count_per_page).items(count):
+                tweets.append(self.__parse_tweet(tweet))
             print("Done")
-
-            user.posts = []
-            for tweet in tweets:
-                user.posts.append(self.__parse_tweet(tweet))
-        except tweepy.error.TweepError:
-            print("Failed. User has protected tweets")
+            return tweets
+        except tweepy.error.TweepError as ex:
+            print("Failed:", ex.response.text)

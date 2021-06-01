@@ -1,5 +1,5 @@
 from personas.common.database import Database
-from personas.common.user import Brand
+from personas.models.user import Brand
 
 if __name__ == "__main__":
     db = Database(db=2)

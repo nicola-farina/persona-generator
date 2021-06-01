@@ -3,8 +3,8 @@ import json
 
 import redis
 
-from personas.common.user import User, Brand
-from personas.common.post import Post
+from personas.models.user import User, Brand
+from personas.models.post import Post
 
 
 class Database(object):
