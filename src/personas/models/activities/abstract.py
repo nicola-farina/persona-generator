@@ -1,4 +1,4 @@
-from personas.models.activities.insights import ActivityInsights
+from personas.models.activities.enrichments import ActivityEnrichments
 
 
 class Activity(object):
@@ -6,7 +6,7 @@ class Activity(object):
                  activity_id: str,
                  source_name: str,
                  author_id: str = None,
-                 enriched_properties: ActivityInsights = None
+                 enriched_properties: ActivityEnrichments = None
                  ) -> None:
         self.activity_id = activity_id
         self.source_name = source_name

@@ -1,14 +1,14 @@
 from typing import List
 
 from personas.models.activities.abstract import Activity
-from personas.models.activities.insights import ActivityInsights
+from personas.models.activities.enrichments import ActivityEnrichments
 
 
 class TwitterActivity(Activity):
     def __init__(self,
                  activity_id: str,
                  author_id: str = None,
-                 enriched_properties: ActivityInsights = None,
+                 enriched_properties: ActivityEnrichments = None,
                  text: str = None,
                  language: str = None,
                  media: List[str] = None,

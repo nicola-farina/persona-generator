@@ -6,6 +6,7 @@ class Attributes(object):
                  name: str = None,
                  gender: str = None,
                  age: int = None,
+                 type_: str = None,
                  location: str = None,
                  pref_language: str = None,
                  family_status: str = None,
@@ -19,6 +20,7 @@ class Attributes(object):
         self.name = name
         self.gender = gender
         self.age = age
+        self.type_ = type_
         self.location = location
         self.pref_language = pref_language
         self.family_status = family_status

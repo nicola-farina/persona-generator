@@ -1,8 +1,7 @@
 from urllib.parse import quote
 import requests
 
-
-class NameClassifier(object):
+class NamsorAPI(object):
 
     __endpoints = {
         "gender": "https://v2.namsor.com/NamSorAPIv2/api2/json/genderFull/",
@@ -18,30 +17,18 @@ class NameClassifier(object):
         response = requests.get(url, headers=headers)
         return response.json()
 
-    def predict_gender(self, name: str) -> dict:
+    def predict_gender(self, name: str) -> tuple:
         print(f"Predicting gender for {name}...", end=" ")
-
         response = self.__call_api(name, "gender")
-
         gender = response["likelyGender"]
         confidence = round(response["probabilityCalibrated"], 2)
-
         print(gender)
-        return {
-            "predicted_gender": gender,
-            "confidence": confidence
-        }
+        return gender, confidence
 
-    def predict_type(self, name: str) -> dict:
+    def predict_type(self, name: str) -> tuple:
         print(f"Predicting type for {name}...", end=" ")
-
         response = self.__call_api(name, "type")
-
-        name_type = response["commonType"]
+        name_type = "human" if response["commonType"] == "anthroponym" else "brand"
         score = response["score"]
-
         print(name_type)
-        return {
-            "predicted_type": name_type,
-            "score": score
-        }
+        return name_type, score

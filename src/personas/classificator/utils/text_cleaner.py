@@ -23,5 +23,9 @@ def remove_symbols(text: str) -> str:
     return text.translate(table)
 
 
+def clean_text(text: str) -> str:
+    return remove_leading_trailing_spaces(remove_symbols(remove_emoji(text)))
+
+
 if __name__ == "__main__":
     demoji.download_codes()

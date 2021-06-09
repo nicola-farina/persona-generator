@@ -1,7 +1,7 @@
 import argparse
 
 from personas.collector.twitter import TwitterCollector
-from personas.collector.keys import \
+from personas.collector.secrets import \
     TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET
 
 if __name__ == "__main__":

@@ -4,6 +4,12 @@
 # dotenv
 .env
 
+# Secrets
+**/secrets.py
+
+# M3 classificator images
+src/personas/classificator/demographics/m3_img/
+
 # virtualenv
 .venv
 venv/

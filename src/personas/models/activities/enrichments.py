@@ -1,7 +1,7 @@
 from typing import Set
 
 
-class ActivityInsights(object):
+class ActivityEnrichments(object):
     def __init__(self,
                  language: str = None,
                  entities: Set[str] = None,
