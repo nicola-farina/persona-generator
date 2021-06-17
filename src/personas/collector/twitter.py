@@ -55,7 +55,7 @@ class TwitterCollector(object):
             urls = [url["url"] for url in urls]
 
         return TwitterActivity(
-            activity_id=tweet.id_str,
+            source_activity_id=tweet.id_str,
             author_id=tweet.user.id_str,
             text=tweet.text,
             language=tweet.lang,

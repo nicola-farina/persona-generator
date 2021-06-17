@@ -1,4 +1,4 @@
-from typing import Set
+from typing import List
 
 
 class Attributes(object):
@@ -14,9 +14,9 @@ class Attributes(object):
                  job: str = None,
                  income: int = None,
                  personality: str = None,
-                 interests: Set[str] = None,
+                 interests: List[str] = None,
                  times_of_activity: dict = None,
-                 channels: Set[str] = None):
+                 channels: List[str] = None):
         self.name = name
         self.gender = gender
         self.age = age

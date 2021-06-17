@@ -4,7 +4,7 @@ from kmodes.kmodes import KModes
 from kneed import KneeLocator
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 
-from personas.common.database import Database
+from personas.database.abstract import Database
 
 if __name__ == "__main__":
     db = Database(db=1)

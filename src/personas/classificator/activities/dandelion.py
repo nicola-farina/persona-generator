@@ -58,7 +58,7 @@ class DandelionAPI(object):
             "label": entity["label"],
             "confidence": entity["confidence"],
             "uri": entity["uri"],
-            "categories": entity["categories"]
+            "categories": entity["categories"] if "categories" in entity else []
         } for entity in response["annotations"]]
         print("Done")
         return entities

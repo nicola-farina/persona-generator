@@ -1,16 +1,17 @@
 from __future__ import annotations
-from typing import List
-from typing import NamedTuple
+from typing import List, Type
+
+from personas.models.sources.abstract import UserDataSource
 
 
 class User(object):
-
     def __init__(self,
-                 id_: str,
-                 data_sources: List[NamedTuple] = None
+                 user_id: str,
+                 brand_id: str,
+                 data_sources: List[Type[UserDataSource]]
                  ) -> None:
-        self.id_ = id_
-        self.data_sources = data_sources
+        #TODO
+        pass
 
     @classmethod
     def from_dict(cls, dct: dict) -> User:

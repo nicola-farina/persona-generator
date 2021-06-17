@@ -52,6 +52,8 @@ class CustomM3Inference(object):
             pred = self.__m3.infer([m3_input])[data_source.source_user_id]
             pred["org"]["human"] = pred["org"].pop("is-org")
             pred["org"]["brand"] = pred["org"].pop("non-org")
+            # Remove image file
+            os.remove(img_path)
             return pred
         else:
             print("Could not predict the image.")

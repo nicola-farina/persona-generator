@@ -1,11 +1,11 @@
-from typing import Set
+from typing import List
 
 
 class ActivityEnrichments(object):
     def __init__(self,
                  language: str = None,
-                 entities: Set[str] = None,
-                 topics: Set[str] = None,
+                 entities: List[str] = None,
+                 topics: List[str] = None,
                  sentiment: float = None) -> None:
         self.language = language
         self.entities = entities

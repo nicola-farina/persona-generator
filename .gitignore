@@ -8,7 +8,7 @@
 **/secrets.py
 
 # M3 classificator images
-src/personas/classificator/demographics/m3_img/
+src/personas/classificator/sources/m3_img/
 
 # virtualenv
 .venv
