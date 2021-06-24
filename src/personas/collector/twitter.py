@@ -17,22 +17,24 @@ class TwitterCollector(object):
         self.api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
     @staticmethod
-    def __parse_user(data) -> TwitterDataSource:
-        if data.default_profile_image:
-            data.profile_image_url_https = None
+    def __parse_user(data_source, user_data) -> TwitterDataSource:
+        if user_data.default_profile_image:
+            user_data.profile_image_url_https = None
+        else:
+            # Remove "_normal" to have full size image
+            user_data.profile_image_url_https = user_data.profile_image_url_https.replace("_normal", "")
 
-        return TwitterDataSource(
-            source_user_id=data.id_str,
-            username=data.screen_name,
-            attributes=None,
-            name=data.name,
-            location=data.location,
-            profile_image_url=data.profile_image_url_https,
-            description=data.description,
-            url=data.url,
-            followers_count=data.followers_count,
-            following_count=data.friends_count
-        )
+        data_source.source_user_id = user_data.id_str
+        data_source.username = user_data.screen_name
+        data_source.name = user_data.name
+        data_source.location = user_data.location
+        data_source.profile_image_url = user_data.profile_image_url_https
+        data_source.description = user_data.description
+        data_source.url = user_data.url
+        data_source.followers_count = user_data.followers_count
+        data_source.following_count = user_data.friends_count
+
+        return data_source
 
     @staticmethod
     def __parse_tweet(tweet) -> TwitterActivity:
@@ -66,12 +68,12 @@ class TwitterCollector(object):
             shares=tweet.retweet_count
         )
 
-    def get_user(self, user_id: str) -> TwitterDataSource:
-        print(f"Downloading profile data of Twitter user {user_id}...", end=" ")
+    def get_profile_info(self, data_source: TwitterDataSource) -> TwitterDataSource:
+        print(f"Downloading profile data of Twitter user {data_source.source_user_id}...", end=" ")
         try:
-            user_data = self.api.get_user(user_id=user_id)
+            user_data = self.api.get_user(user_id=data_source.source_user_id)
             print("Done")
-            return self.__parse_user(user_data)
+            return self.__parse_user(data_source, user_data)
         except tweepy.error.TweepError as ex:
             print("Failed:", ex.response.text)
 

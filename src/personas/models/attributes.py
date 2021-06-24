@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import List
 
 
@@ -5,7 +7,7 @@ class Attributes(object):
     def __init__(self,
                  name: str = None,
                  gender: str = None,
-                 age: int = None,
+                 age: str = None,
                  type_: str = None,
                  location: str = None,
                  pref_language: str = None,
@@ -31,6 +33,32 @@ class Attributes(object):
         self.interests = interests
         self.times_of_activity = times_of_activity
         self.channels = channels
+
+    def to_dict(self) -> dict:
+        return {
+            "name": self.name,
+            "gender": self.gender,
+            "age": self.age,
+            "type_": self.type_,
+            "location": self.location,
+            "pref_language": self.pref_language,
+            "family_status": self.family_status,
+            "has_children": self.has_children,
+            "job": self.job,
+            "income": self.income,
+            "personality": self.personality,
+            "interests": self.interests,
+            "times_of_activity": self.times_of_activity,
+            "channels": self.channels
+        }
+
+    @classmethod
+    def from_dict(cls, dct: dict) -> Attributes:
+        allowed_fields = ("name", "gender", "age", "type_", "location", "pref_language", "family_status",
+                          "has_children", "job", "income", "personality", "interests", "times_of_activity",
+                          "channels")
+        allowed_attributes = {k: v for k, v in dct.items() if k in allowed_fields}
+        return cls(**allowed_attributes)
 
     def __repr__(self):
         string = ""

@@ -1,92 +1,138 @@
+from typing import List
+
+
 import pandas as pd
 import numpy as np
-from kmodes.kmodes import KModes
-from kneed import KneeLocator
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.metrics import silhouette_score
+from sklearn_extra.cluster._k_medoids import KMedoids
+import matplotlib.pyplot as plt
 
-from personas.database.abstract import Database
+from personas.database.connection import DatabaseConnection
+from personas.database.users import UsersDatabase
+from personas.database.sources import SourcesDatabase
+
+
+def distance_matrix(data: List[dict]) -> np.ndarray:
+    size = len(data)
+    matrix = np.empty([size, size])
+    for i in range(0, size):
+        for j in range(0, size):
+            if i == j:
+                matrix[i][j] = 0
+            else:
+                matrix[i][j] = compute_distance(data[i], data[j])
+    return matrix
+
+
+def compute_distance(user1: dict, user2: dict) -> float:
+    distances = np.zeros(9)
+    try:
+        # Gender: categorical, simply add 1 if different
+        distances[0] += user1["gender"] != user2["gender"]
+        # Age: categorical, the more the difference, the more the distance
+        if user1["age"] is None and user2["age"] is None:
+            pass
+        elif user1["age"] is None or user2["age"] is None:
+            distances[1] += 1
+        else:
+            try:
+                ages_map = {"<=18": 0, "19-29": 1, "30-39": 2, ">=40": 3}
+                distances[1] += abs(ages_map[user1["age"]] - ages_map[user2["age"]]) / 3
+            except KeyError:
+                pass
+        # Type: categorical
+        distances[2] += user1["type_"] != user2["type_"]
+        # Language: categorical
+        distances[3] += user1["pref_language"] != user2["pref_language"]
+        # Family status: categorical
+        distances[4] += user1["family_status"] != user2["family_status"]
+        # Children: categorical
+        distances[5] += user1["has_children"] != user2["has_children"]
+        # Job: TODO
+        # Personality: 4 letters, count how many are different (weighted double)
+        if user1["personality"] is None and user2["personality"] is None:
+            pass
+        elif user1["personality"] is None or user2["personality"] is None:
+            distances[6] += 1
+        else:
+            for i in range(0, 4):
+                distances[6] += user1["personality"][i] != user2["personality"][i]
+        # Interests: Jaccard distance (weighted double)
+        user1_interests = set(user1["interests"]) if user1["interests"] is not None else set()
+        user2_interests = set(user2["interests"]) if user2["interests"] is not None else set()
+        if len(user1_interests) > 0 or len(user2_interests) > 0:
+            distances[7] += 2*(1 - len(user1_interests.intersection(user2_interests)) / len(user1_interests.union(user2_interests)))
+        # Channels: Jaccard distance
+        user1_channels = set(user1["channels"]) if user1["channels"] is not None else set()
+        user2_channels = set(user2["channels"]) if user2["channels"] is not None else set()
+        if len(user1_channels) > 0 or len(user2_channels) > 0:
+            distances[8] += 1 - len(user1_channels.intersection(user2_channels)) / len(user1_channels.union(user2_channels))
+        # Now compute average
+        return np.mean(distances, axis=0)
+    except KeyError:
+        raise KeyError("Trying to cluster users on missing keys")
+
 
 if __name__ == "__main__":
-    db = Database(db=1)
+    conn = DatabaseConnection()
+    conn.init("localhost", 6379, 0)
 
-    uhopper_id = "223439979"
-    brand = db.get_brand(uhopper_id)
+    db_users = UsersDatabase(conn)
+    db_sources = SourcesDatabase(conn)
+    # Get users of a brand
+    users = db_users.get_users_of_brand("3fa0099b1dc648e7b1f7d21e2ef906e8")
+    # Populate user attributes based on its data sources
+    for user in users:
+        sources = db_sources.get_sources_of_user(user.user_id)
+        # In this demo, only Twitter is supported
+        user.attributes = sources[0].attributes
 
-    users = brand.followers
+    # Many attributes are tuple, where the second value is the confidence. Keep only the first value
+    data = [user.attributes.to_dict() for user in users]
+    for user in data:
+        if user["gender"]:
+            user["gender"] = user["gender"][0]
+        if user["age"]:
+            user["age"] = user["age"][0]
+        if user["type_"]:
+            user["type_"] = user["type_"][0]
 
-    # Create users dataframe
-    users_dict = [user.__dict__ for user in users]
-    df_users = pd.DataFrame(users_dict)
+    # Create dataframe
+    df_users = pd.DataFrame(data)
+    print(df_users)
 
-    # List of relevant columns
-    cols_to_drop = ["id_", "name", "location", "profile_image_url", "biography", "site", "followers_count",
-                    "following_count", "posts", "type_", "cluster"]
-    cols_to_cluster = [col for col in df_users.columns if col not in cols_to_drop]
+    # Drop irrelevant columns
+    df_users.drop("name", axis=1, inplace=True)
 
-    # Drop rows with brand type
-    df_users = df_users[df_users["type_"] != "brand-name"]
+    # Precompute custom distance matrix
+    dist_matrix = distance_matrix(data)
 
-    # Drop rows which contain "NaN" values
-    df_users.fillna(value=np.nan, inplace=True)
-    df_users.dropna(inplace=True, subset=cols_to_cluster)
+    # Try different number of clusters to find the best one
+    scores = []
+    max_clusters = 20
+    for i in range(2, max_clusters):
+        model = KMedoids(n_clusters=i, metric="precomputed", method="pam")
+        labels = model.fit_predict(dist_matrix)
+        scores.append(silhouette_score(dist_matrix, labels, metric="precomputed"))
 
-    # PREPARE DATAFRAME FOR CLUSTERING
-    df_cluster = df_users.copy(deep=True)
+    # Plot silhuette score
+    plt.plot(range(2, max_clusters), scores)
+    plt.xlabel("Number of clusters")
+    plt.ylabel("Avg Silhuette Score (more is better)")
+    plt.xticks(range(2, max_clusters))
+    plt.show()
 
-    # Replace posts with the number of posts
-    df_cluster["posts"] = [len(posts) for posts in df_cluster["posts"]]
+    # Choose the number of clusters with max score
+    n_cluster = np.argmax(scores)+2
+    model = KMedoids(n_clusters=n_cluster, metric="precomputed", method="pam")
+    labels = model.fit_predict(dist_matrix)
 
-    # Categorize users into active and popular
-    df_cluster["active"] = [1 if posts >= 100 else 0 for posts in df_cluster["posts"]]
-    df_cluster["popular"] = [1 if int(followers) >= 100 else 0 for followers in df_cluster["followers_count"]]
+    medoids = []
+    # Print the medoids for each cluster
+    for i, index in enumerate(model.medoid_indices_):
+        medoids.append(df_users.iloc[[index]])
+        print(f"CLUSTER {i}:")
+        print(medoids[i])
+        print("="*50)
 
-    # Drop irrelevant columns for clustering
-    df_cluster.drop(cols_to_drop, axis=1, inplace=True)
-
-    # Label-encode categorical columns
-    gender_encoder = LabelEncoder()
-    df_cluster["gender"] = gender_encoder.fit_transform(df_cluster["gender"])
-
-    lang_encoder = LabelEncoder()
-    df_cluster["pref_language"] = lang_encoder.fit_transform(df_cluster["pref_language"])
-
-    # Find optimal number of clusters (KModes)
-    costs = []
-    kmax = 15
-
-    for k in range(1, kmax + 1):
-        kmodes = KModes(n_clusters=k, init="Cao")
-        kmodes.fit(df_cluster)
-        costs.append(kmodes.cost_)
-
-    kn = KneeLocator(range(1, kmax + 1), costs, curve="convex", direction="decreasing")
-    number_clusters = 2
-
-    # Perform clustering
-    kmodes = KModes(n_clusters=number_clusters, init="Cao")
-    clusters = kmodes.fit_predict(df_cluster)
-    centroids = kmodes.cluster_centroids_
-
-    # Save decoded centroids in brand
-    centroids_df = pd.DataFrame(kmodes.cluster_centroids_, columns=df_cluster.columns)
-    centroids_df["gender"] = gender_encoder.inverse_transform(centroids_df["gender"])
-    centroids_df["pref_language"] = lang_encoder.inverse_transform(centroids_df["pref_language"])
-    centroids_df["cluster"] = centroids_df.index
-    brand.centroids = centroids_df.to_dict("records")
-
-    # Add cluster attribute to original dataframe
-    df_users["cluster"] = clusters
-
-    # Add cluster attribute to the followers
-    i, j = 0, 0
-    while j < len(df_users):
-        follower = brand.followers[i]
-        clustered = df_users.iloc[j]
-        if follower.id_ == clustered.id_:
-            follower.cluster = int(clustered.cluster)
-            j += 1
-        i += 1
-
-    # Save users with their cluster in DB
-    db = Database(db=2)
-    db.save_brand(brand)
+    # Generate personas

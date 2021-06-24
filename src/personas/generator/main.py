@@ -1,4 +1,4 @@
-from personas.database.abstract import Database
+from personas.database.connection import Database
 from personas.models.user import Brand
 
 if __name__ == "__main__":

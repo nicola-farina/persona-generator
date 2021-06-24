@@ -22,7 +22,7 @@ class UserDataSource(object):
             "source_user_id": self.source_user_id,
             "source_id": self.source_id,
             "username": self.username,
-            "attributes": None if self.attributes is None else self.attributes
+            "attributes": None if self.attributes is None else self.attributes.to_dict()
         }
 
     def __repr__(self):

@@ -2,7 +2,7 @@ from typing import Union
 
 from rejson import Path
 
-from personas.database.abstract import Database
+from personas.database.connection import Database
 from personas.models.activities.abstract import Activity
 from personas.models.activities.twitter import TwitterActivity
 

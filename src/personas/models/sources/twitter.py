@@ -42,7 +42,10 @@ class TwitterDataSource(UserDataSource):
 
     @classmethod
     def from_dict(cls, properties: dict) -> TwitterDataSource:
-        allowed_fields = ("source_user_id", "source_id", "username", "attributes", "name",
+        allowed_fields = ("source_user_id", "source_id", "username", "name",
                           "location", "profile_image_url", "description", "url", "followers_count", "following_count")
         allowed_attributes = {k: v for k, v in properties.items() if k in allowed_fields}
+        attributes_dict = properties.get("attributes", None)
+        if attributes_dict is not None:
+            allowed_attributes["attributes"] = Attributes.from_dict(attributes_dict)
         return cls(**allowed_attributes)

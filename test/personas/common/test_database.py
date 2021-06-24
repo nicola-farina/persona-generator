@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from personas.database.abstract import Database
+from personas.database.connection import Database
 
 
 class TestDatabase(TestCase):

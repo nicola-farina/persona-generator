@@ -10,6 +10,9 @@ from personas.classificator.sources.namsor import NamsorAPI
 from personas.classificator.sources.secrets import NAMSOR_API_KEY
 from personas.classificator.utils.text_cleaner import clean_text
 
+from personas.database.connection import DatabaseConnection
+from personas.database.sources import SourcesDatabase
+
 
 def on_connect(client: mqtt.Client, userdata, flags, rc) -> None:
     print(f"Connected with result code {str(rc)}")
@@ -22,12 +25,14 @@ def on_message(client: mqtt.Client, userdata, msg) -> None:
     print(f"Received data source of user {data_source.username}...")
 
     # Enrich data source
-    data_source.enriched_properties = get_enrichments(data_source)
+    data_source.attributes = get_enrichments(data_source)
+    print("Enriched properties:", data_source.attributes)
 
-    # Send data to next queue
-    data_source = json.dumps(data_source.to_dict())
-    client.publish("classificator/enriched_sources", data_source)
-    print("Done")
+    # Save data
+    conn = DatabaseConnection()
+    conn.init("localhost", 6379, 0)
+    db = SourcesDatabase(conn)
+    db.save_source(data_source)
 
 
 def get_max_tuple_from_dict(dct: dict) -> tuple:
@@ -63,8 +68,8 @@ def get_enrichments(data_source: TwitterDataSource) -> Attributes:
 if __name__ == "__main__":
     # Setup argparser
     parser = argparse.ArgumentParser()
-    parser.add_argument("--host_mqtt", required=True)
-    parser.add_argument("--port_mqtt", required=True)
+    parser.add_argument("--host-mqtt", required=True)
+    parser.add_argument("--port-mqtt", required=True)
     args = parser.parse_args()
     host = args.host_mqtt
     port = int(args.port_mqtt)

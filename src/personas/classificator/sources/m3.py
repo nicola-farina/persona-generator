@@ -50,8 +50,8 @@ class CustomM3Inference(object):
             }
             # Predict
             pred = self.__m3.infer([m3_input])[data_source.source_user_id]
-            pred["org"]["human"] = pred["org"].pop("is-org")
-            pred["org"]["brand"] = pred["org"].pop("non-org")
+            pred["org"]["human"] = pred["org"].pop("non-org")
+            pred["org"]["brand"] = pred["org"].pop("is-org")
             # Remove image file
             os.remove(img_path)
             return pred

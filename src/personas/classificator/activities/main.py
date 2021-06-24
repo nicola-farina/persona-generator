@@ -64,8 +64,8 @@ def get_enrichments(activity: TwitterActivity) -> ActivityEnrichments:
 if __name__ == "__main__":
     # Setup argparser
     parser = argparse.ArgumentParser()
-    parser.add_argument("--host_mqtt", required=True)
-    parser.add_argument("--port_mqtt", required=True)
+    parser.add_argument("--host-mqtt", required=True)
+    parser.add_argument("--port-mqtt", required=True)
     args = parser.parse_args()
     host = args.host_mqtt
     port = int(args.port_mqtt)
