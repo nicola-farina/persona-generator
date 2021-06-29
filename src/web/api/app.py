@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-from personas.database.connection import DatabaseConnection
+from src.common.database.connection import DatabaseConnection
 
 db_connection = DatabaseConnection()
 
@@ -12,11 +12,7 @@ def create_app(config_class: object) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_class)
     # Setup persistent DB connection
-    db_connection.init(
-        host=app.config.get("DB_HOST"),
-        port=app.config.get("DB_PORT"),
-        db=app.config.get("DB_NAME")
-    )
+    db_connection.init(app.config.get("DB_URL"))
     # Setup JWT
     jwt = JWTManager(app)
     # Setup API

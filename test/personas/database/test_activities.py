@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from personas.database.activities import ActivitiesDatabase
-from personas.models.activities.twitter import TwitterActivity
+from common.database.activities import ActivitiesDatabase
+from common.models.activities.twitter import TwitterActivity
 
 
 class TestActivitiesDatabase(TestCase):

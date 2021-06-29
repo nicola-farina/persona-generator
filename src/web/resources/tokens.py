@@ -1,10 +1,10 @@
-from flask import request, url_for
+from flask import request
 from flask_restful import Resource
 from flask_jwt_extended import create_access_token
 import bcrypt
 
 from web.api.app import db_connection
-from src.personas.database.accounts import AccountsDatabase
+from src.common.database.accounts import AccountsDatabase
 
 
 class Tokens(Resource):

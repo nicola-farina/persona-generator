@@ -1,12 +1,13 @@
 import os
 from datetime import timedelta
+from dotenv import load_dotenv
 
+load_dotenv()
 
 class Config(object):
-    SECRET_KEY = os.getenv("SECRET_KEY")
     PROPAGATE_EXCEPTIONS = True
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "secret")
+    DB_URL = os.getenv("DB_URL")
+    QUEUE_HOST = os.getenv("QUEUE_HOST")
+    QUEUE_PORT = os.getenv("QUEUE_PORT")
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
-    DB_HOST = os.getenv("DB_HOST", "localhost")
-    DB_PORT = os.getenv("DB_PORT", "6379")
-    DB_NAME = os.getenv("DB_NAME", "0")

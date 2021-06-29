@@ -1,15 +1,20 @@
 from typing import List
+import os
 
-
+from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
 from sklearn.metrics import silhouette_score
 from sklearn_extra.cluster._k_medoids import KMedoids
 import matplotlib.pyplot as plt
 
-from personas.database.connection import DatabaseConnection
-from personas.database.users import UsersDatabase
-from personas.database.sources import SourcesDatabase
+from common.database.connection import DatabaseConnection
+from common.database.users import UsersDatabase
+from common.database.sources import SourcesDatabase
+from common.database.personas import PersonasDatabase
+from common.models.persona import Persona
+from common.models.attributes import Attributes
+from src.personas.clusterer.generator import PersonaGenerator
 
 
 def distance_matrix(data: List[dict]) -> np.ndarray:
@@ -25,7 +30,7 @@ def distance_matrix(data: List[dict]) -> np.ndarray:
 
 
 def compute_distance(user1: dict, user2: dict) -> float:
-    distances = np.zeros(9)
+    distances = np.zeros(10)
     try:
         # Gender: categorical, simply add 1 if different
         distances[0] += user1["gender"] != user2["gender"]
@@ -48,7 +53,6 @@ def compute_distance(user1: dict, user2: dict) -> float:
         distances[4] += user1["family_status"] != user2["family_status"]
         # Children: categorical
         distances[5] += user1["has_children"] != user2["has_children"]
-        # Job: TODO
         # Personality: 4 letters, count how many are different (weighted double)
         if user1["personality"] is None and user2["personality"] is None:
             pass
@@ -58,15 +62,22 @@ def compute_distance(user1: dict, user2: dict) -> float:
             for i in range(0, 4):
                 distances[6] += user1["personality"][i] != user2["personality"][i]
         # Interests: Jaccard distance (weighted double)
-        user1_interests = set(user1["interests"]) if user1["interests"] is not None else set()
-        user2_interests = set(user2["interests"]) if user2["interests"] is not None else set()
-        if len(user1_interests) > 0 or len(user2_interests) > 0:
-            distances[7] += 2*(1 - len(user1_interests.intersection(user2_interests)) / len(user1_interests.union(user2_interests)))
+        sum = 0
+        if user1["interests"] is None and user2["interests"] is None:
+            pass
+        elif user1["interests"] is None or user2["interests"] is None:
+            distances[7] += 1
+        else:
+            for interest in user1["interests"]:
+                sum += abs(user1["interests"][interest] - user2["interests"][interest])
+            distances[7] += 3*(sum/len(user1["interests"]))
         # Channels: Jaccard distance
         user1_channels = set(user1["channels"]) if user1["channels"] is not None else set()
         user2_channels = set(user2["channels"]) if user2["channels"] is not None else set()
         if len(user1_channels) > 0 or len(user2_channels) > 0:
             distances[8] += 1 - len(user1_channels.intersection(user2_channels)) / len(user1_channels.union(user2_channels))
+        # Attitude
+        distances[9] += abs(user1["attitude"]-user2["attitude"]) / 2
         # Now compute average
         return np.mean(distances, axis=0)
     except KeyError:
@@ -74,13 +85,15 @@ def compute_distance(user1: dict, user2: dict) -> float:
 
 
 if __name__ == "__main__":
-    conn = DatabaseConnection()
-    conn.init("localhost", 6379, 0)
+    load_dotenv()
+    DB_URL = os.getenv("DB_URL")
+    conn = DatabaseConnection(DB_URL)
 
     db_users = UsersDatabase(conn)
     db_sources = SourcesDatabase(conn)
     # Get users of a brand
-    users = db_users.get_users_of_brand("3fa0099b1dc648e7b1f7d21e2ef906e8")
+    brand_id = "a39544eca6e14da3bae9c95418df0861"
+    users = db_users.get_users_of_brand(brand_id)
     # Populate user attributes based on its data sources
     for user in users:
         sources = db_sources.get_sources_of_user(user.user_id)
@@ -123,16 +136,23 @@ if __name__ == "__main__":
     plt.show()
 
     # Choose the number of clusters with max score
-    n_cluster = np.argmax(scores)+2
+    n_cluster = 3 #np.argmax(scores)+2
     model = KMedoids(n_clusters=n_cluster, metric="precomputed", method="pam")
     labels = model.fit_predict(dist_matrix)
 
     medoids = []
     # Print the medoids for each cluster
     for i, index in enumerate(model.medoid_indices_):
-        medoids.append(df_users.iloc[[index]])
+        medoids.append(df_users.iloc[[index]].to_dict(orient="records")[0])
         print(f"CLUSTER {i}:")
-        print(medoids[i])
+        print(medoids[i]["interests"])
         print("="*50)
 
-    # Generate personas
+    pg = PersonaGenerator()
+    db_personas = PersonasDatabase(conn)
+    for medoid in medoids:
+        persona = Persona(brand_id=brand_id, attributes=Attributes.from_dict(medoid))
+        persona.name = pg.get_name(persona.attributes.gender)
+        persona.photo = pg.get_image(persona.attributes.gender)
+        print(persona.to_dict())
+

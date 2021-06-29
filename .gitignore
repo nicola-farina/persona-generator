@@ -6,9 +6,10 @@
 
 # Secrets
 **/secrets.py
+.env
 
 # M3 classificator images
-src/personas/classificator/sources/m3_img/
+src/personas/enricher/sources/m3_img/
 
 # virtualenv
 .venv

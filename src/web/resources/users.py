@@ -7,11 +7,11 @@ import paho.mqtt.client as mqtt
 
 from web.common.utils import abort_if_not_authorized
 from web.api.app import db_connection
-from personas.models.user import User
-from personas.models.sources.twitter import TwitterDataSource
-from personas.database.users import UsersDatabase
-from personas.database.brands import BrandsDatabase
-from personas.database.sources import SourcesDatabase
+from src.common.models.user import User
+from src.common.models.sources.twitter import TwitterDataSource
+from src.common.database.users import UsersDatabase
+from src.common.database.brands import BrandsDatabase
+from src.common.database.sources import SourcesDatabase
 
 
 def user_to_api_repr(user: User, attributes: bool = False) -> dict:
@@ -46,22 +46,23 @@ class Users(Resource):
             # Save data sources
             db_sources = SourcesDatabase(db_connection)
             data_sources = []
-            data_sources_ids = []
             for raw_data_source in raw_data_sources:
                 if raw_data_source["source_name"] == "twitter":
                     data_source = TwitterDataSource(source_user_id=raw_data_source["source_user_id"])
-                    data_source_id = db_sources.save_source(data_source)
                     data_sources.append(data_source)
-                    data_sources_ids.append(data_source_id)
+                    # Save the empty data source in the DB
+                    db_sources.save_source(data_source)
             # Save user
             db_users = UsersDatabase(db_connection)
+            data_sources_ids = [ds.source_id for ds in data_sources]
             user = User(brand_id=brand_id, data_sources=data_sources_ids)
             db_users.save_user(user)
             # Send the data sources for collection
             queue = mqtt.Client()
             queue.connect("localhost")
             for data_source in data_sources:
-                queue.publish("collector/twitter", json.dumps(data_source.to_dict()))
+                topic = f"collector/{data_source.source_name}"
+                queue.publish(topic, json.dumps(data_source.to_dict()))
             # Return a response
             return user_to_api_repr(user), 201
         except KeyError:

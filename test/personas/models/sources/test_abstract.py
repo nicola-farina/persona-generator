@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from personas.models.sources.twitter import TwitterDataSource
+from common.models import TwitterDataSource
 
 
 class TestUserDataSource(TestCase):

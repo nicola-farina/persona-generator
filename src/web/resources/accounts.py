@@ -5,8 +5,8 @@ import bcrypt
 
 from web.common.utils import abort_if_not_authorized
 from web.api.app import db_connection
-from src.personas.models.account import Account
-from src.personas.database.accounts import AccountsDatabase
+from src.common.models.account import Account
+from src.common.database.accounts import AccountsDatabase
 
 
 def account_to_api_repr(account: Account) -> dict:
@@ -34,7 +34,8 @@ class Accounts(Resource):
                 return {"message": "Error, email already taken"}, 409
             # Create account
             hashed_psw = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-            account = Account(email, name, hashed_psw=hashed_psw)
+            account = Account(email=email, name=name, hashed_psw=hashed_psw)
+            print("QUIIIIIIIIIIIIIIIII", account)
             # Save it in DB
             db.save_account(account)
             # Return a response

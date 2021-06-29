@@ -1,9 +1,7 @@
 from unittest import TestCase
 
-import fakeredis
-
-from personas.database.brands import BrandsDatabase
-from personas.models.brand import Brand
+from common.database.brands import BrandsDatabase
+from common.models import Brand
 
 
 class TestBrandsDatabase(TestCase):

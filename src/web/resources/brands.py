@@ -4,8 +4,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from web.common.utils import abort_if_not_authorized
 from web.api.app import db_connection
-from src.personas.models.brand import Brand
-from src.personas.database.brands import BrandsDatabase
+from src.common.models.brand import Brand
+from src.common.database.brands import BrandsDatabase
 
 
 def brand_to_api_repr(brand: Brand) -> dict:

@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from personas.database.sources import SourcesDatabase
-from personas.models.sources.twitter import TwitterDataSource
+from common.database.sources import SourcesDatabase
+from common.models import TwitterDataSource
 
 
 class TestSourcesDatabase(TestCase):
