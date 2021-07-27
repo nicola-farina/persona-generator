@@ -1,20 +1,20 @@
 from typing import List
 import os
+import argparse
 
 from dotenv import load_dotenv
 import pandas as pd
 import numpy as np
 from sklearn.metrics import silhouette_score
 from sklearn_extra.cluster._k_medoids import KMedoids
-import matplotlib.pyplot as plt
 
 from common.database.connection import DatabaseConnection
 from common.database.users import UsersDatabase
 from common.database.sources import SourcesDatabase
 from common.database.personas import PersonasDatabase
 from common.models.persona import Persona
-from common.models.attributes import Attributes
-from src.personas.clusterer.generator import PersonaGenerator
+from common.models.enrichments import Enrichments
+from src.personas.clustering.generator import PersonaGenerator
 
 
 def distance_matrix(data: List[dict]) -> np.ndarray:
@@ -91,9 +91,13 @@ if __name__ == "__main__":
 
     db_users = UsersDatabase(conn)
     db_sources = SourcesDatabase(conn)
-    # Get users of a brand
-    brand_id = "a39544eca6e14da3bae9c95418df0861"
+    # Get brand from cli args
+    parser = argparse.ArgumentParser()
+    parser.add_argument("brand", help="The ID of the brand to generate personas for", type=str)
+    brand_id = parser.parse_args().brand
     users = db_users.get_users_of_brand(brand_id)
+    if not users:
+        raise ValueError("ERROR: Brand not found")
     # Populate user attributes based on its data sources
     for user in users:
         sources = db_sources.get_sources_of_user(user.user_id)
@@ -112,7 +116,6 @@ if __name__ == "__main__":
 
     # Create dataframe
     df_users = pd.DataFrame(data)
-    print(df_users)
 
     # Drop irrelevant columns
     df_users.drop("name", axis=1, inplace=True)
@@ -128,15 +131,8 @@ if __name__ == "__main__":
         labels = model.fit_predict(dist_matrix)
         scores.append(silhouette_score(dist_matrix, labels, metric="precomputed"))
 
-    # Plot silhuette score
-    plt.plot(range(2, max_clusters), scores)
-    plt.xlabel("Number of clusters")
-    plt.ylabel("Avg Silhuette Score (more is better)")
-    plt.xticks(range(2, max_clusters))
-    plt.show()
-
     # Choose the number of clusters with max score
-    n_cluster = 3 #np.argmax(scores)+2
+    n_cluster = np.argmax(scores) + 2
     model = KMedoids(n_clusters=n_cluster, metric="precomputed", method="pam")
     labels = model.fit_predict(dist_matrix)
 
@@ -148,11 +144,13 @@ if __name__ == "__main__":
         print(medoids[i]["interests"])
         print("="*50)
 
+    # Generate personas
     pg = PersonaGenerator()
     db_personas = PersonasDatabase(conn)
     for medoid in medoids:
-        persona = Persona(brand_id=brand_id, attributes=Attributes.from_dict(medoid))
+        persona = Persona(brand_id=brand_id, attributes=Enrichments.from_dict(medoid))
         persona.name = pg.get_name(persona.attributes.gender)
         persona.photo = pg.get_image(persona.attributes.gender)
+        db_personas.save_persona(persona)
         print(persona.to_dict())
 

@@ -4,6 +4,7 @@ import requests
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 
+
 def convert_wikipedia_pageids_to_english_urls(lang: str, pageids: List[str]) -> List[str]:
     if lang not in DandelionAPI.SUPPORTED_LANGUAGES or len(pageids) == 0:
         return []

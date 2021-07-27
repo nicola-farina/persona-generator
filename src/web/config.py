@@ -10,4 +10,4 @@ class Config(object):
     QUEUE_HOST = os.getenv("QUEUE_HOST")
     QUEUE_PORT = os.getenv("QUEUE_PORT")
     JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=24)

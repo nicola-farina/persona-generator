@@ -2,7 +2,7 @@ from flask import request, url_for
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
-from web.common.utils import abort_if_not_authorized
+from web.utils import abort_if_not_authorized
 from web.api.app import db_connection
 from src.common.models.brand import Brand
 from src.common.database.brands import BrandsDatabase

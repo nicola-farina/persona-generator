@@ -5,7 +5,7 @@ from typing import Union
 from PIL import Image
 from m3inference import M3Inference, get_lang
 
-from common.models.sources.twitter import TwitterDataSource
+from common.models.data_source import TwitterDataSource
 
 
 class CustomM3Inference(object):

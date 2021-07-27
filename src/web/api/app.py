@@ -13,6 +13,7 @@ def create_app(config_class: object) -> Flask:
     app.config.from_object(config_class)
     # Setup persistent DB connection
     db_connection.init(app.config.get("DB_URL"))
+    # Setup queue
     # Setup JWT
     jwt = JWTManager(app)
     # Setup API
@@ -28,7 +29,6 @@ def create_app(config_class: object) -> Flask:
     from web.resources.users import Users, UsersID
     api.add_resource(Users, "/users", endpoint="api.users")
     api.add_resource(UsersID, "/users/<string:user_id>", endpoint="api.user")
+
     api.init_app(app)
-
     return app
-

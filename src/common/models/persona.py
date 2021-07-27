@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from src.common.models.attributes import Attributes
+from src.common.models.enrichments import Enrichments
 from src.common.models.utils import generate_id
 
 
@@ -11,7 +11,7 @@ class Persona(object):
                  name: str = None,
                  photo: str = None,
                  description: str = None,
-                 attributes: Attributes = None) -> None:
+                 attributes: Enrichments = None) -> None:
         self.persona_id = generate_id() if persona_id is None else persona_id
         self.brand_id = brand_id
         self.name = name
@@ -35,7 +35,7 @@ class Persona(object):
         allowed_attributes = {k: v for k, v in dct.items() if k in allowed_fields}
         attributes_dict = dct.get("attributes", None)
         if attributes_dict is not None:
-            allowed_attributes["attributes"] = Attributes.from_dict(attributes_dict)
+            allowed_attributes["attributes"] = Enrichments.from_dict(attributes_dict)
         return cls(**allowed_attributes)
 
     def __repr__(self):

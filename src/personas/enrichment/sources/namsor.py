@@ -1,6 +1,7 @@
 from urllib.parse import quote
 import requests
 
+
 class NamsorAPI(object):
 
     __endpoints = {

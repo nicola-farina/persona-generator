@@ -3,8 +3,7 @@ from typing import Union, List
 from rejson import Path
 
 from common.database.connection import DatabaseConnection
-from common.models.activities.general import Activity
-from common.models.activities.twitter import TwitterActivity
+from common.models.activity import Activity, TwitterActivity
 
 
 class ActivitiesDatabase(object):

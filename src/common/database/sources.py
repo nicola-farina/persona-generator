@@ -3,8 +3,7 @@ from typing import Union, List
 from rejson import Path
 
 from src.common.database.connection import DatabaseConnection
-from src.common.models.sources.general import DataSource
-from src.common.models.sources.twitter import TwitterDataSource
+from common.models.data_source import DataSource, TwitterDataSource
 
 
 class SourcesDatabase(object):

@@ -5,10 +5,10 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import paho.mqtt.client as mqtt
 
-from web.common.utils import abort_if_not_authorized
+from web.utils import abort_if_not_authorized
 from web.api.app import db_connection
 from src.common.models.user import User
-from src.common.models.sources.twitter import TwitterDataSource
+from src.common.models.data_source import TwitterDataSource
 from src.common.database.users import UsersDatabase
 from src.common.database.brands import BrandsDatabase
 from src.common.database.sources import SourcesDatabase

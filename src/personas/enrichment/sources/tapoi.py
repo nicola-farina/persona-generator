@@ -1,11 +1,10 @@
 import requests
 import json
-from typing import List
 
 
 class Tapoi(object):
     def __init__(self):
-        with open("category_map.json", mode="r") as infile:
+        with open("tapoi_categories.json", mode="r") as infile:
             self.category_map = json.load(infile)
 
     @staticmethod

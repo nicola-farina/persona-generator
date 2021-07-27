@@ -3,7 +3,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required
 import bcrypt
 
-from web.common.utils import abort_if_not_authorized
+from web.utils import abort_if_not_authorized
 from web.api.app import db_connection
 from src.common.models.account import Account
 from src.common.database.accounts import AccountsDatabase

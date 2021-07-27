@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from personas.enricher.activities.dandelion import DandelionAPI
+from personas.enrichment.activities.dandelion import DandelionAPI
 
 
 class TestDandelionAPI(TestCase):

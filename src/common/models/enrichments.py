@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import List
 
 
-class Attributes(object):
+class Enrichments(object):
     def __init__(self,
                  name: str = None,
                  gender: str = None,
@@ -56,7 +56,7 @@ class Attributes(object):
         }
 
     @classmethod
-    def from_dict(cls, dct: dict) -> Attributes:
+    def from_dict(cls, dct: dict) -> Enrichments:
         allowed_fields = ("name", "gender", "age", "type_", "location", "pref_language", "family_status",
                           "has_children", "job", "income", "personality", "interests", "attitude",
                           "times_of_activity", "channels")

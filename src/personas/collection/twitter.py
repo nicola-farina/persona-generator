@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 from common.database.connection import DatabaseConnection
 from common.database.sources import SourcesDatabase
 from common.database.activities import ActivitiesDatabase
-from common.models.sources.twitter import TwitterDataSource
-from common.models.activities.twitter import TwitterActivity
+from common.models.data_source import TwitterDataSource
+from common.models.activity import TwitterActivity
 
 
 class TwitterCollector(object):

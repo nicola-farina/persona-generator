@@ -6,9 +6,8 @@ from dotenv import load_dotenv
 
 from common.database.connection import DatabaseConnection
 from common.database.activities import ActivitiesDatabase
-from personas.enricher.activities.dandelion import DandelionAPI
-from common.models.activities.enrichments import ActivityEnrichments
-from common.models.activities.twitter import TwitterActivity
+from personas.enrichment.activities.dandelion import DandelionAPI
+from common.models.activity import ActivityEnrichments, TwitterActivity
 
 
 def on_connect(client: mqtt.Client, userdata, flags, rc) -> None:
