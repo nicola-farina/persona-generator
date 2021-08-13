@@ -1,0 +1,540 @@
+[
+  {
+    "name": "Gianluigi Donnarumma",
+    "id": 3082872863,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Gianluigi Buffon",
+    "id": 606211203,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Alessandro Del Piero",
+    "id": 240714255,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Kylian Mbappé",
+    "id": 1725137533,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Antoinne Griezmann",
+    "id": 950341134,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Dawid Lewandowski",
+    "id": 2330223926,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Ciro Immobile",
+    "id": 587333483,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Lorenzo Insigne",
+    "id": 975748303408238600,
+    "interest": "Sports"
+  },
+  {
+    "name": "Giorgio Chiellini",
+    "id": 38001497,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Cristiano Ronaldo",
+    "id": 155659213,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Leonardo Bonucci",
+    "id": 630169165,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Claudio Marchisio",
+    "id": 886426412,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Andrea Pirlo",
+    "id": 2330330082,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Neymar",
+    "id": 158487331,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Francesco Totti",
+    "id": 773181360475402200,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Sergio Ramos",
+    "id": 151123001,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Manuel Neuer",
+    "id": 1269425228,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "David Silva",
+    "id": 485801262,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Kevin De Bruyne",
+    "id": 728592182,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Karim Benzema",
+    "id": 1964571728,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Eden Hazard",
+    "id": 366592246,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Bruno Fernandes",
+    "id": 1123232834376933400,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Paul Pogba",
+    "id": 2491702663,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Wayne Rooney",
+    "id": 285332860,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Kakà",
+    "id": 60865434,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Andrés Iniesta",
+    "id": 90836187,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Federico Bernardeschi",
+    "id": 2746617150,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Armando Izzo",
+    "id": 1622772740,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Federico Chiesa",
+    "id": 2230170215,
+    "interest": "Sports"
+  },
+  {
+    "name": "Fabio Quagliarella",
+    "id": 2154597446,
+    "gender": "male",
+    "interest": "Sports"
+  },
+  {
+    "name": "Giuseppe Conte",
+    "id": 999578121123848200,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Luigi Di Maio",
+    "id": 48062712,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Matteo Salvini",
+    "id": 270839361,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Giorgia Meloni",
+    "id": 130537001,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Matteo Renzi",
+    "id": 18762875,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Nicola Zingaretti",
+    "id": 403544693,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Paolo Gentiloni",
+    "id": 406869976,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "David Sassoli",
+    "id": 54988878,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Silvio Berlusconi",
+    "id": 920277002858500100,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Roberto Fico",
+    "id": 22834067,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Virginia Raggi",
+    "id": 1530798872,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Alfonso Bonafede",
+    "id": 1413168613,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Danilo Toninelli",
+    "id": 960924277,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Alessandro Di Battista",
+    "id": 615597661,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Paola Taverna",
+    "id": 497797578,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Carla Ruocco",
+    "id": 978488840,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Riccardo Fraccaro",
+    "id": 1052596340,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Manlio Di Stefano",
+    "id": 208642171,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Fabio Castaldo",
+    "id": 1368850908,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Giuliano Ferrara",
+    "id": 2424047370,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Tiziana Beghin",
+    "id": 2343845391,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Mario Adinolfi",
+    "id": 2195622679,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Luigi Gallo",
+    "id": 920435114,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Marco Zullo",
+    "id": 2780234221,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Antonella Laricchia",
+    "id": 1398174300,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Mario Michele Giarrusso",
+    "id": 114332714,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Mario Furore",
+    "id": 106548241,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Daniela Aiuto",
+    "id": 2466169957,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Eleonora Evi",
+    "id": 1135141640,
+    "gender": "female",
+    "interest": "Politics"
+  },
+  {
+    "name": "Beppe Grillo",
+    "id": 19067940,
+    "gender": "male",
+    "interest": "Politics"
+  },
+  {
+    "name": "Ariana Grande",
+    "id": 34507480,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Justin Bieber",
+    "id": "27260086Music",
+    "gender": "male",
+    "interest": ""
+  },
+  {
+    "name": "Miley Cyrus",
+    "id": 268414482,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Lady Gaga",
+    "id": 14230524,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Rihanna",
+    "id": 79293791,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Katy Perry",
+    "id": 21447363,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Britney Spears",
+    "id": 16409683,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Matthew Bellamy",
+    "id": 271310204,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Taylor Swift",
+    "id": 17919972,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Billie Eilish",
+    "id": 2150327072,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Shakira",
+    "id": 44409004,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Justin Timberlake",
+    "id": 26565946,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Bruno Mars",
+    "id": 100220864,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Selena Gomez",
+    "id": 23375688,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Chris Brown",
+    "id": 119509520,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Lenny Kravitz",
+    "id": 23006794,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Ed Sheeran",
+    "id": 85452649,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Enrique Iglesias",
+    "id": 46452468,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Harry Styles",
+    "id": 181561712,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Avril Lavigne",
+    "id": 73992972,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Carly Rae Jepsen",
+    "id": 24852465,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Pitbull",
+    "id": 31927467,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "David Guetta",
+    "id": 23976386,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Zucchero Fornaciari",
+    "id": 196210052,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Marco Mengoni",
+    "id": 96948912,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Alessandra Amoroso",
+    "id": 79481514,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Jennifer Lopez",
+    "id": 85603854,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "Alicia Keys",
+    "id": 35094637,
+    "gender": "female",
+    "interest": "Music"
+  },
+  {
+    "name": "J. Cole",
+    "id": 19028953,
+    "gender": "male",
+    "interest": "Music"
+  },
+  {
+    "name": "Sean Don",
+    "id": 17915334,
+    "gender": "male",
+    "interest": "Music"
+  }
+]
